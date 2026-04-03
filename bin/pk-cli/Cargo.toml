@@ -1,0 +1,24 @@
+[package]
+name = "pk-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "pk"
+path = "src/main.rs"
+
+[dependencies]
+age = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+eyre = { workspace = true }
+indicatif = { workspace = true }
+inquire = { workspace = true }
+pk-core = { path = "../../crates/pk-core" }
+rand_core = { workspace = true, features = ["getrandom"] }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+
+[lints]
+workspace = true

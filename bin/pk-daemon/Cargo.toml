@@ -1,0 +1,42 @@
+[package]
+name = "pk-daemon"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "pk-daemon"
+path = "src/main.rs"
+
+[lib]
+name = "pk_daemon"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { workspace = true, features = ["derive"] }
+eyre = { workspace = true }
+pk-core = { path = "../../crates/pk-core" }
+secrecy = { workspace = true }
+tokio = { workspace = true, features = [
+    "macros",
+    "rt-multi-thread",
+    "signal",
+    "net",
+    "io-util",
+    "time",
+    "sync",
+] }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+zeroize = { workspace = true }
+
+[lints]
+workspace = true
+
+[dev-dependencies]
+cucumber = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+[[test]]
+name = "bdd"
+harness = false
