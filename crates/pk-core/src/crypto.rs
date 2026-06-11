@@ -4,9 +4,8 @@
 
 use chacha20poly1305::{
     XChaCha20Poly1305, XNonce,
-    aead::{Aead, KeyInit, OsRng},
+    aead::{Aead, KeyInit},
 };
-use rand_core::RngCore;
 use thiserror::Error;
 
 /// Errors that can occur during cryptographic operations.
@@ -26,7 +25,7 @@ pub enum CryptoError {
 /// Generate a 32-byte Data Encryption Key (DEK) using the OS RNG.
 pub fn generate_dek() -> Result<[u8; 32], CryptoError> {
     let mut dek = [0u8; 32];
-    OsRng.fill_bytes(&mut dek);
+    getrandom::fill(&mut dek).map_err(|_| CryptoError::RandomGenerationFailed)?;
     Ok(dek)
 }
 
@@ -86,14 +85,14 @@ pub fn decrypt_with_dek(ciphertext: &[u8], dek: &[u8; 32]) -> Result<Vec<u8>, Cr
 
 // --- Internal helpers ---
 
-fn generate_nonce() -> [u8; 24] {
+fn generate_nonce() -> Result<[u8; 24], CryptoError> {
     let mut nonce = [0u8; 24];
-    OsRng.fill_bytes(&mut nonce);
-    nonce
+    getrandom::fill(&mut nonce).map_err(|_| CryptoError::RandomGenerationFailed)?;
+    Ok(nonce)
 }
 
 fn encrypt_data(plaintext: &[u8], key: &[u8; 32]) -> Result<Vec<u8>, CryptoError> {
-    let nonce = generate_nonce();
+    let nonce = generate_nonce()?;
     let cipher =
         XChaCha20Poly1305::new_from_slice(key).map_err(|_| CryptoError::RandomGenerationFailed)?;
     let ciphertext = cipher

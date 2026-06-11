@@ -187,13 +187,13 @@ pub fn execute_sops_and_exit(sops_args: &[String], age_key: &str) -> ! {
 为了让工具像商业软件一样好用，CLI 应该设计得极简且直观：
 
 * **`pk init`**
-    引导式初始化：自动生成 age 密钥，弹窗按指纹绑定 Passkey，提示设置备用密码。
+  引导式初始化：自动生成 age 密钥，弹窗按指纹绑定 Passkey，提示设置备用密码。
 * **`pk status`**
-    输出当前 Daemon 状态（例如：`🔓 Unlocked (Expires in 12m 30s)`）。
+  输出当前 Daemon 状态（例如：`🔓 Unlocked (Expires in 12m 30s)`）。
 * **`pk lock`**
-    向 Daemon 发送指令，立刻强制擦除内存中的私钥。
+  向 Daemon 发送指令，立刻强制擦除内存中的私钥。
 * **`pk run <command>`**
-    代理命令执行。
+  代理命令执行。
   * 示例：`pk run sops edit secrets.yaml`
   * 简写：可以直接将别名加入 `.zshrc`: `alias sops="pk run sops"`。以后用户直接敲 `sops edit ...`，如果没解锁就会自动弹指纹识别，体验丝滑至极。
 

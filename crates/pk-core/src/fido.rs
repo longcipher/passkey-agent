@@ -2,7 +2,6 @@
 //!
 //! Implements hmac-secret extension for KEK derivation.
 
-use rand_core::RngCore;
 use thiserror::Error;
 
 /// Opaque credential identifier.
@@ -24,13 +23,16 @@ pub enum FidoError {
     /// The operation was cancelled by the user.
     #[error("operation cancelled by user")]
     UserCancelled,
+    /// Random number generation failed.
+    #[error("random generation failed")]
+    RandomGenerationFailed,
 }
 
 /// Generate a 32-byte random salt for hmac-secret.
-pub fn generate_salt() -> [u8; 32] {
+pub fn generate_salt() -> Result<[u8; 32], FidoError> {
     let mut salt = [0u8; 32];
-    rand_core::OsRng.fill_bytes(&mut salt);
-    salt
+    getrandom::fill(&mut salt).map_err(|_| FidoError::RandomGenerationFailed)?;
+    Ok(salt)
 }
 
 /// Generate a passkey credential with hmac-secret extension.
@@ -63,14 +65,14 @@ mod tests {
 
     #[test]
     fn generate_salt_produces_32_bytes() {
-        let salt = generate_salt();
+        let salt = generate_salt().expect("OS RNG should not fail");
         assert_eq!(salt.len(), 32);
     }
 
     #[test]
     fn generate_salt_produces_different_values() {
-        let salt1 = generate_salt();
-        let salt2 = generate_salt();
+        let salt1 = generate_salt().expect("OS RNG should not fail");
+        let salt2 = generate_salt().expect("OS RNG should not fail");
         assert_ne!(salt1, salt2);
     }
 

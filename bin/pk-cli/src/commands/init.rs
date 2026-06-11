@@ -6,7 +6,6 @@ use pk_core::{
     crypto::{derive_kek_password, encrypt_dek, encrypt_with_dek, generate_dek},
     fido::{generate_passkey_credential, generate_salt},
 };
-use rand_core::{OsRng, RngCore};
 
 pub(crate) async fn init_command() -> eyre::Result<()> {
     let pb = ProgressBar::new_spinner();
@@ -24,7 +23,7 @@ pub(crate) async fn init_command() -> eyre::Result<()> {
     let dek = generate_dek()?;
 
     pb.set_message("Setting up passkey route (may fail gracefully)...");
-    let salt_1 = generate_salt();
+    let salt_1 = generate_salt()?;
     let passkey_route = if let Ok((credential_id, _kek_1)) = generate_passkey_credential(&salt_1) {
         let encrypted_dek = encrypt_dek(&dek, &_kek_1)?;
         Some(PasskeyRoute { credential_id: credential_id.into(), salt: salt_1, encrypted_dek })
@@ -47,7 +46,8 @@ pub(crate) async fn init_command() -> eyre::Result<()> {
     }
 
     let mut password_salt = [0u8; 32];
-    OsRng.fill_bytes(&mut password_salt);
+    getrandom::fill(&mut password_salt)
+        .map_err(|e| eyre::eyre!("random generation failed: {e}"))?;
 
     let kek_2 = derive_kek_password(&master_password, &password_salt)?;
     let encrypted_dek_password = encrypt_dek(&dek, &kek_2)?;
