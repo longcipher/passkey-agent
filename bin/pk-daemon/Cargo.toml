@@ -34,9 +34,5 @@ zeroize = { workspace = true }
 workspace = true
 
 [dev-dependencies]
-cucumber = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
-[[test]]
-name = "bdd"
-harness = false

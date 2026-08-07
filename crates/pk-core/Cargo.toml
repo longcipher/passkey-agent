@@ -26,15 +26,10 @@ tokio = { workspace = true, features = [
 # authenticator = { workspace = true }  # Disabled: requires NSS build dependency
 
 [dev-dependencies]
-cucumber = { workspace = true }
 pk-daemon = { path = "../../bin/pk-daemon" }
 proptest = { workspace = true }
 tempfile = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
-
-[[test]]
-name = "bdd"
-harness = false
 
 [lints]
 workspace = true

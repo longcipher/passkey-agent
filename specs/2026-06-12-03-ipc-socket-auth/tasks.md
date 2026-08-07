@@ -19,29 +19,6 @@ Commit: `c845a6f`
    - Add `#[cfg(unix)]` guards since `peer_cred()` is Unix-only
 3. **REFACTOR**: Run `cargo check -p pk-daemon` — confirm compilation
 
-## Task 3.2: Add BDD scenario for auth rejection
-
-- **Context**: Verify unauthorized connections are rejected
-- **Verification**: `cargo test -p pk-daemon --test bdd` — new scenario passes
-- **Loop Type**: BDD+TDD
-- **Status**: TODO
-
-### Steps
-
-1. **RED**: Add new Gherkin scenario to `features/daemon_state.feature`:
-
-   ```gherkin
-   Scenario: Unauthorized connection is rejected
-     Given a running daemon
-     When a different user connects to the socket
-     Then the connection should be rejected
-   ```
-
-2. **GREEN**: Add step definitions to `bin/pk-daemon/tests/bdd.rs`:
-   - Since testing cross-user is complex, use a unit test approach instead
-   - Add a unit test in `server.rs` that verifies peer credential comparison logic
-3. **REFACTOR**: Run `cargo test -p pk-daemon` — confirm all tests pass
-
 ## Task 3.3: Add unit test for credential comparison
 
 - **Context**: Verify the UID comparison logic works correctly

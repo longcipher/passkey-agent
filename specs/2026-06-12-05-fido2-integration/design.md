@@ -52,9 +52,8 @@ The `authenticator` crate (Mozilla) provides CTAP2 protocol support with hmac-se
 - **Decision**: Use `authenticator` crate v0.5.0 already in workspace dependencies
 - **Consequences**: Cross-platform FIDO2 support; NSS build dependency on Linux; requires platform authenticator daemon on Linux
 
-## BDD/TDD Strategy
+## Test Strategy
 
-- **Framework**: Existing cucumber-rs BDD setup
 - **Unit Tests**: Mock-based tests for credential creation/auth flow
 - **Integration Tests**: Manual testing on macOS Touch ID (FIDO2 requires hardware)
 

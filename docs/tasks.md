@@ -452,32 +452,6 @@ pub enum AgentState {
 
 ---
 
-### Task 16: BDD Feature Scenarios
-
-**Scope**: Write Gherkin acceptance tests for core workflows.
-
-**Feature files** under `features/`:
-
-1. `features/init.feature` — Initialization flow
-2. `features/unlock.feature` — Passkey and password unlock
-3. `features/run.feature` — Run command with exec
-4. `features/lock.feature` — Lock and TTL expiry
-
-**Steps**:
-
-1. Write Gherkin scenarios for each feature
-2. Update `crates/pk-core/tests/bdd.rs` or create crate-level BDD runner
-3. Implement step definitions
-4. Run `just bdd` to verify
-
-**Acceptance criteria**:
-
-- All BDD scenarios pass
-- Step definitions cover happy path and error cases
-- `just bdd` runs successfully
-
----
-
 ### Task 17: Integration and End-to-End Testing
 
 **Scope**: Wire all components together and verify end-to-end.
@@ -495,7 +469,7 @@ pub enum AgentState {
 **Acceptance criteria**:
 
 - Full workflow verified manually or via integration tests
-- `just test-all` passes (TDD + BDD)
+- `just test-all` passes
 - `just lint` passes with no warnings
 
 ---
@@ -536,7 +510,7 @@ Task 1 (Workspace)
                                                           │                           ├── Task 13 (lock)
                                                           │                           └── Task 14 (run) ── Task 15 (CLI Main)
                                                           │
-                                                          └── Task 16 (BDD) ── Task 17 (Integration) ── Task 18 (Docs)
+                                                          └── Task 17 (Integration) ── Task 18 (Docs)
 ```
 
 ## Parallelism Opportunities

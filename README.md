@@ -41,7 +41,6 @@ pk lock
 
 ```bash
 just test       # Unit + property tests
-just bdd        # BDD acceptance scenarios
 just test-all   # Both suites
 ```
 
@@ -54,7 +53,6 @@ passkey-agent/
 │   └── pk-daemon/       # Background daemon (binary: pk-daemon)
 ├── crates/
 │   └── pk-core/         # Shared library
-├── features/            # Gherkin BDD scenarios
 └── docs/
     ├── design.md        # Architecture design document
     └── tasks.md         # Implementation task breakdown

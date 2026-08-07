@@ -39,6 +39,6 @@ Since adding `nix` just for `getuid()` is heavy, use `std::os::unix::process::Co
 ## Verification
 
 ```bash
-cargo test -p pk-daemon --test bdd
-# Expected: all scenarios pass, plus new auth-related scenarios
+cargo test -p pk-daemon
+# Expected: all tests pass, including new auth-related tests
 ```

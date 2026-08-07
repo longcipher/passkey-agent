@@ -19,7 +19,7 @@ Commit: `c845a6f`
 
 - **Context**: Currently returns `Err(AuthenticatorUnavailable)` — must invoke platform authenticator
 - **Verification**: `cargo check -p pk-core` succeeds with real implementation
-- **Loop Type**: BDD+TDD
+- **Loop Type**: TDD
 - **Status**: TODO
 
 ### Steps
@@ -39,7 +39,7 @@ Commit: `c845a6f`
 
 - **Context**: Currently returns `Err(AuthenticatorUnavailable)` — must invoke platform authenticator
 - **Verification**: `cargo check -p pk-core` succeeds
-- **Loop Type**: BDD+TDD
+- **Loop Type**: TDD
 - **Status**: TODO
 
 ### Steps
