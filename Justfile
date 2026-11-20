@@ -20,7 +20,6 @@ lint:
   taplo fmt --check
   cargo +nightly fmt --all -- --check
   RUSTC_WRAPPER= cargo +nightly clippy --all -- -D warnings
-  cargo machete
   just check-mutation-scope
 
 # Run tests
@@ -188,7 +187,6 @@ clean:
 
 # Install all required development tools
 setup:
-  cargo install cargo-machete
   cargo install taplo-cli
   cargo install typos-cli
   cargo install rumdl
@@ -222,10 +220,6 @@ test-nextest:
 # Run miri on unsafe code
 miri:
   cargo +nightly miri test --all-features
-
-# Check for unused dependencies
-unused-deps:
-  cargo machete
 
 # Update all dependencies
 update-deps:

@@ -42,17 +42,20 @@ temp file and run `cargo mutants --in-diff <diff-file>` for that file only, with
 60 mutants / 300 s. Never add a whole-repo mutation recipe: `just check-mutation-scope` fails
 `just lint` when an unbounded mutation command appears in a build or CI file.
 
-`just lint` is exactly the tool set CI installs: `typos`, `rumdl`, `taplo fmt --check`, `cargo +nightly fmt --check`, `cargo +nightly clippy --all -- -D warnings`, `cargo machete`.
+`just lint` is exactly the tool set CI installs: `typos`, `rumdl`, `taplo fmt --check`, `cargo +nightly fmt --check`, `cargo +nightly clippy --all -- -D warnings`. The unused-dependency check is Cargo's native `unused_dependencies` lint, which runs as part of every `cargo check`/`clippy`.
 
 ## Workspace rules
 
 - Never hand-type dependency versions. Add per-crate deps with `cargo add <crate> -p <crate>`. Shared deps go into root `[workspace.dependencies]` (numeric versions only, no default features) and are referenced with `dep = { workspace = true }`.
-- Sub-crates inherit `version`/`edition`/`license`/`repository` via `workspace = true` and must set `[lints] workspace = true`.
-- TOML formatting is `taplo` (CI installs `taplo-cli`, not `cargo-sort`); unused-dependency detection is `cargo machete` (CI installs `cargo-machete`, not `cargo-shear`). Do not introduce the other two tools here.
+- Sub-crates inherit `version`/`edition`/`license`/`rust-version` via `workspace = true` and must set `[lints] workspace = true`.
+- TOML formatting is `taplo` (CI installs `taplo-cli`, not `cargo-sort`); unused-dependency detection is Cargo's native `unused_dependencies` lint. Do not introduce `cargo-sort` or a third-party unused-dependency checker here.
 - There is no `rust-toolchain.toml`; CI installs a nightly toolchain, so use `cargo +nightly fmt` and `cargo +nightly clippy` exactly as the Justfile does.
 - `allow_attributes` is `deny`: a bare `#[allow(...)]` is a hard compile error. `unwrap_used`, `expect_used`, `panic`, `todo`, `unimplemented`, `print_stdout` and `print_stderr` are denied too.
-- `[workspace.package] repository` is still the placeholder `TODO`, so `just publish-check` cannot succeed yet. Fix that field before any release attempt.
-- `authenticator`, `interprocess`, `ecdysis` and `config` are declared in `[workspace.dependencies]` but not wired into any crate. The `authenticator` line is commented out in `crates/pk-core/Cargo.toml` because it needs an NSS build dependency; `crates/pk-core/src/fido.rs` therefore returns `AuthenticatorUnavailable` and the FIDO2 `hmac-secret` path is a stub. Do not pretend that path works.
+- `[workspace.package]` has no `repository` field, so `just publish-check` cannot succeed yet. Add the real repository URL to the workspace and inherit it before any release attempt.
+- The `authenticator` crate is not used because it needs an NSS build dependency; `crates/pk-core/src/fido.rs` therefore returns `AuthenticatorUnavailable` and the FIDO2 `hmac-secret` path is a stub. Do not pretend that path works.
+- Workspace MSRV is Rust 1.100. Prefer newly stabilized features and APIs over older workarounds; do not add feature gates for anything already stable in 1.100.
+- `[workspace.lints.cargo]` enables Cargo's native `unused_dependencies` lint, the only unused-dependency check; do not reintroduce a third-party checker. Its level is `warn`, and `.cargo/config.toml` sets `build.warnings = "deny"`, so a finding fails the gate.
+- `.cargo/config.toml` sets resolver `incompatible-rust-versions = "fallback"` (MSRV-aligned resolution) and `registry.global-min-publish-age = "5 days"` (Rust 1.100 dependency cooldown); keep both.
 
 ## Dependency choices
 
